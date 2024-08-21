@@ -25,6 +25,16 @@ const formData = ref({
   savingsContribution: 0,
 });
 
+const formRef = ref<HTMLFormElement | null>(null);
+
+const submitForm = async () => {
+  if (!formRef?.value?.checkValidity()) {
+    console.error('Form is invalid');
+    return;
+  }
+  formRef.value?.requestSubmit();
+}
+
 const submitApplication = async () => {
   const response = await api.applications.post(formData.value)
   if (response.success) toast.success('Application Saved Successfully.')
@@ -65,7 +75,7 @@ const submitApplication = async () => {
     <BModal :visible="modal.isVisible.value" :confirm="modal.confirm">
       <template #header>Submit loan application</template>
 
-      <form @submit.prevent="submitApplication()">
+      <form ref="formRef" @submit.prevent="submitApplication()">
         <!-- Need to change with v-for after change state with object -->
         <label for="applicant_name">Name</label>
         <BTextInput v-model="formData.applicantName" id="applicant_name" type="text" required />
@@ -107,7 +117,7 @@ const submitApplication = async () => {
       </form>
 
       <template #footer>
-        <BButton type="submit" variant="primary" label="Submit"></BButton>
+        <BButton type="submit" variant="primary" label="Submit" @click="submitForm" ></BButton>
         <BButton label="Cancel" @click="modal.confirm(false)"></BButton>
       </template>
     </BModal>

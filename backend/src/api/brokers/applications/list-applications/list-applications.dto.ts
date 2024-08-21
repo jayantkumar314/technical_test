@@ -77,11 +77,13 @@ export class ApplicationDto extends PickType(Application, [
   'outgoingAddress',
   'outgoingMortgage',
   'outgoingValuation',
-  'savingsContribution'
+  'savingsContribution',
 ]) { }
 
 export class BrokerApplicationPostResponseDto extends SuccessResponseDto {
-  readonly loanAmount: number
+  readonly loanAmount: number;
+  readonly application: ApplicationDto;
+  readonly isLoanAmountBelowAverage: boolean;
 }
 
 class BrokerApplicationDto extends PickType(Application, [
